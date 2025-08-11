@@ -1,5 +1,5 @@
 (function(){
-  const ID = 'imagine-cheats-overlay-v5';
+  const ID = 'imagine-cheats-overlay-v6';
   const TEXT = 'IMAGINE USING CHEATS';
 
   // Toggle off if exists
@@ -22,11 +22,12 @@
 
   function render(){
     overlay.innerHTML = '';
-    const tileW = Math.max(120, Math.floor(window.innerWidth / 6));
-    const tileH = Math.max(50, Math.floor(window.innerHeight / 8));
-    const cols = Math.ceil(window.innerWidth / tileW) + 1;
-    const rows = Math.ceil(window.innerHeight / tileH) + 1;
-    const fontSize = Math.max(14, Math.floor(tileH * 0.5)) + 'px'; // smaller font
+    // Reduced number of tiles by increasing tile size
+    const tileW = Math.floor(window.innerWidth / 3);
+    const tileH = Math.floor(window.innerHeight / 4);
+    const cols = 3;  // fixed smaller number of columns
+    const rows = 4;  // fixed smaller number of rows
+    const fontSize = Math.max(24, Math.floor(tileH * 0.6)) + 'px';
 
     for (let y = 0; y < rows; y++){
       for (let x = 0; x < cols; x++){
@@ -34,13 +35,13 @@
         el.textContent = TEXT;
         Object.assign(el.style, {
           position: 'absolute',
-          left: (x * tileW) + 'px',
-          top: (y * tileH) + 'px',
+          left: (x * tileW + 20) + 'px', // add some margin
+          top: (y * tileH + 20) + 'px',
           fontSize: fontSize,
-          fontWeight: '700',
+          fontWeight: '900',
           color: colorToggle ? 'rgba(255,0,0,0.95)' : 'rgba(255,255,0,0.95)',
           transform: 'rotate(-15deg)',
-          textShadow: '1px 1px 3px rgba(0,0,0,0.5)',
+          textShadow: '2px 2px 5px rgba(0,0,0,0.6)',
           whiteSpace: 'nowrap',
           userSelect: 'none',
           pointerEvents: 'none'
