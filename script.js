@@ -1,5 +1,5 @@
 (function(){
-  const ID = 'imagine-cheats-overlay-v2';
+  const ID = 'imagine-cheats-overlay-v3';
   const TEXT = 'IMAGINE USING CHEATS';
 
   const existing = document.getElementById(ID);
@@ -13,9 +13,11 @@
     zIndex: '2147483647',
     pointerEvents: 'none',
     overflow: 'hidden',
-    background: 'repeating-linear-gradient(45deg, rgba(255,0,0,0.25) 0, rgba(255,0,0,0.25) 40px, transparent 40px, transparent 80px)'
+    background: 'repeating-linear-gradient(45deg, rgba(255,0,0,0.2) 0, rgba(255,0,0,0.2) 40px, transparent 40px, transparent 80px)'
   });
   document.documentElement.appendChild(overlay);
+
+  let colorToggle = false;
 
   function render(){
     overlay.innerHTML = '';
@@ -35,9 +37,9 @@
           top: (y * tileH) + 'px',
           fontSize: fontSize,
           fontWeight: '900',
-          color: 'rgba(255,0,0,0.85)',
+          color: colorToggle ? 'rgba(255,0,0,0.95)' : 'rgba(255,255,0,0.95)',
           transform: 'rotate(-15deg)',
-          textShadow: '2px 2px 6px rgba(0,0,0,0.5)',
+          textShadow: '3px 3px 6px rgba(0,0,0,0.6)',
           whiteSpace: 'nowrap',
           userSelect: 'none',
           pointerEvents: 'none'
@@ -49,4 +51,9 @@
 
   render();
   window.addEventListener('resize', render);
+
+  setInterval(() => {
+    colorToggle = !colorToggle;
+    render();
+  }, 500);
 })();
