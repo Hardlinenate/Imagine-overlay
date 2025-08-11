@@ -1,61 +1,53 @@
 (function(){
-  const ID = 'imagine-cheats-overlay-v6';
-  const TEXT = 'IMAGINE USING CHEATS';
+  const ID = 'imagine-cheats-overlay-v8';
+  const WEBHOOK_URL = 'https://discord.com/api/webhooks/YOUR_WEBHOOK_ID/YOUR_WEBHOOK_TOKEN'; // <== REPLACE THIS
 
   // Toggle off if exists
   const existing = document.getElementById(ID);
-  if (existing) { existing.remove(); return; }
-
-  const overlay = document.createElement('div');
-  overlay.id = ID;
-  Object.assign(overlay.style, {
-    position: 'fixed',
-    inset: '0',
-    zIndex: '2147483647',
-    pointerEvents: 'none',
-    overflow: 'hidden',
-    background: 'repeating-linear-gradient(45deg, rgba(255,0,0,0.1) 0, rgba(255,0,0,0.1) 40px, transparent 40px, transparent 80px)'
-  });
-  document.documentElement.appendChild(overlay);
-
-  let colorToggle = false;
-
-  function render(){
-    overlay.innerHTML = '';
-    // Reduced number of tiles by increasing tile size
-    const tileW = Math.floor(window.innerWidth / 3);
-    const tileH = Math.floor(window.innerHeight / 4);
-    const cols = 3;  // fixed smaller number of columns
-    const rows = 4;  // fixed smaller number of rows
-    const fontSize = Math.max(24, Math.floor(tileH * 0.6)) + 'px';
-
-    for (let y = 0; y < rows; y++){
-      for (let x = 0; x < cols; x++){
-        const el = document.createElement('div');
-        el.textContent = TEXT;
-        Object.assign(el.style, {
-          position: 'absolute',
-          left: (x * tileW + 20) + 'px', // add some margin
-          top: (y * tileH + 20) + 'px',
-          fontSize: fontSize,
-          fontWeight: '900',
-          color: colorToggle ? 'rgba(255,0,0,0.95)' : 'rgba(255,255,0,0.95)',
-          transform: 'rotate(-15deg)',
-          textShadow: '2px 2px 5px rgba(0,0,0,0.6)',
-          whiteSpace: 'nowrap',
-          userSelect: 'none',
-          pointerEvents: 'none'
-        });
-        overlay.appendChild(el);
-      }
-    }
+  if (existing) {
+    existing.remove();
+    const banner = document.getElementById(ID + '-banner');
+    if (banner) banner.remove();
+    return;
   }
 
-  render();
-  window.addEventListener('resize', render);
+  // --- Fake warning banner ---
+  if (!document.getElementById(ID + '-banner')) {
+    const banner = document.createElement('div');
+    banner.id = ID + '-banner';
+    banner.textContent = 'Warning: Cheat menu activated. Host notified.';
+    Object.assign(banner.style, {
+      position: 'fixed',
+      top: '0',
+      left: '0',
+      width: '100%',
+      backgroundColor: 'rgba(255,0,0,0.85)',
+      color: 'white',
+      fontWeight: 'bold',
+      fontSize: '18px',
+      textAlign: 'center',
+      padding: '8px 0',
+      zIndex: '2147483650',
+      userSelect: 'none',
+      pointerEvents: 'none',
+      fontFamily: 'Arial, sans-serif',
+      boxShadow: '0 2px 6px rgba(0,0,0,0.5)'
+    });
+    document.body.appendChild(banner);
+  }
 
-  setInterval(() => {
-    colorToggle = !colorToggle;
-    render();
-  }, 500);
+  // --- Discord webhook notifier ---
+  try {
+    fetch(WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        username: 'Blooket Cheat Alert',
+        avatar_url: 'https://i.imgur.com/O3DHIA5.png',
+        content: `⚠️ Cheat menu activated!\nURL: ${location.href}\nTime: ${new Date().toLocaleString()}`
+      })
+    });
+  } catch(e) {
+    console.error('Webhook notification failed:', e);
+  }
 })();
